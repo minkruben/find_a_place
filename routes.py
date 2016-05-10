@@ -1,6 +1,6 @@
 from flask import  Flask, render_template, request, session, redirect, url_for
 from models import db, User
-from forms import SignupForm, SigninForm
+from forms import SignupForm, SigninForm, AddressForm
 
 
 app = Flask(__name__)
@@ -13,6 +13,8 @@ app.secret_key = "development key"
 
 @app.route("/")
 def index():
+    if 'email' not in session:
+        return redirect('signin')
     return render_template("index.html")
 
 
@@ -23,6 +25,9 @@ def about():
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
+    if 'email' in session:
+        return redirect(url_for('home'))
+
     form = SignupForm()
 
     if request.method == 'POST':
@@ -42,6 +47,8 @@ def signup():
 
 @app.route("/signin", methods=['GET', 'POST'])
 def signin():
+    if 'email' in session:
+        return  redirect(url_for('home'))
     form = SigninForm()
 
     if request.method == "POST":
@@ -53,7 +60,7 @@ def signin():
 
             user = User.query.filter_by(email=email).first()
             if user is not None and user.check_password(password):
-                session['email'] = form.email.dara
+                session['email'] = form.email.data
                 return redirect(url_for('home'))
             else:
                 return redirect(url_for('signin'))
@@ -62,10 +69,27 @@ def signin():
         return render_template('signin.html', form=form)
 
 
-
 @app.route("/home")
 def home():
-    return render_template('home.html')
+
+    form = AddressForm()
+
+    if request.method == 'POST':
+        if form.validate() == False:
+            return render_template('home.html', form=form)
+        else:
+            pass
+
+    elif request.method == 'GET':
+         if 'email' not in session :
+             return redirect(url_for('signin'))
+         return render_template('home.html', form= form)
+
+
+@app.route('/signout')
+def signout():
+    session.pop('email', None)
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
