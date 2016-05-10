@@ -71,6 +71,7 @@ a {
   text-transform: uppercase;
 }
 
+
 .btn-secondary {
   background: #ffffff;
   border: 1px solid #e6e6e6;
@@ -103,6 +104,15 @@ header {
   letter-spacing: 2.5px;
   text-transform: uppercase;
 }
+
+.signin {
+  float: right;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
 
 .title a, .title a:visited {
   color: #3a3a3a;
